@@ -1,4 +1,4 @@
-### 什么是 TypeScript
+## 什么是 TypeScript
 
 添加了类型系统的 JavaScript，适用于任何规模的项目。
 
@@ -82,3 +82,32 @@ TypeScript 和 JavaScript 可以共存。意味着可以旧项目的渐进式迁
 
 TypeScript 的另一个重要特性就是坚持与 ECMAScript 标准同步发展。
 
+
+
+
+
+## 安装 TypeScript
+
+TypeScript 的命令行安装方法如下：
+
+```shell
+npm install -g typescript
+```
+
+以上命令在全局安装 tsc 命令，安装完成后，可以执行 tsc 命令
+
+编译一个 TypeScript 文件：
+
+```shell
+tsc hello.ts
+```
+
+约定使用 TypeScript 编写的文件以 .ts 为后缀，用 TypeScript 编写 React 时，以 .tsc 为后缀。
+
+### 编译器
+
+VSCode 本身也是用 TypeScript 编写的。
+
+
+
+## Hello TypeScript
