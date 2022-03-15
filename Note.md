@@ -111,3 +111,68 @@ VSCode 本身也是用 TypeScript 编写的。
 
 
 ## Hello TypeScript
+
+hello.ts
+
+```typescript
+function sayHello(person: string) {
+  return 'Hello, ' + person;
+}
+
+let user = 'Tom';
+console.log(sayHello(user));
+```
+
+执行
+
+```typescript
+tsc hello.ts
+```
+
+生成一个编译好的 hello.js
+
+```javascript
+function sayHello(person) {
+    return 'Hello, ' + person;
+}
+var user = 'Tom';
+console.log(sayHello(user));
+```
+
+在 TypeScript 中，使用 : 指定变量的类型，: 的前后有无空格都可以。上述代码中，用 : 指定 person 参数类型为 string。但是编译为 js 之后，并没有什么检查的代码被插入进来。这是因为 **TypeScript 只会在编译时对类型进行静态检查，如果发现有错误，编译时候就会报错。**而在运行时，与普通的 JavaScript 文件一样，不会对类型进行检查。
+
+## 基础
+
+### 原始数据类型
+
+JavaScript 类型分为两种：原始数据类型（Primitive data types）和对象类型（Object types）。原始类型包括：boolean、number、string、null、undefined 以及 ES6 中新类型 Symbol 和 ES10 中新类型 BigInt。本节主要介绍前五种原始数据类型在 TypeScript 中的应用。
+
+#### Boolean
+
+布尔值是最基础的数据类型，在 TS 中，使用 boolean 定义布尔值类型：
+
+````js
+let isDone: boolean = false;
+
+// 编译通过
+// 后面约定，未强调编译错误的代码片段，默认为编译通过
+````
+
+注意，使用构造函数 Boolean 创造的对象**不是**布尔值：
+
+```typescript
+let createdByNewBoolean: boolean = new Boolean(1);
+// Type 'Boolean' is not assignable to type 'boolean'.
+//   'boolean' is a primitive, but 'Boolean' is a wrapper object. Prefer using 'boolean' when possible.
+```
+
+事实上，上述new Boolean() 返回的是一个 Boolean 对象；
+
+直接调用 Boolean 也可以返回一个 boolean  类型：
+
+````typescript
+let createdByBoolean: boolean = Boolean(1);
+````
+
+在 TypeScript 中，boolean 是 JavaScript 中的基本类型，而 Boolean 是 JavaScript 中的构造函数。其他基本类型 （除了 null 和 undefined）一样，不再赘述。
+
