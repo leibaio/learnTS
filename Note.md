@@ -276,3 +276,28 @@ let num: number = u;
 // Type 'void' is not assignable to type 'number'.
 ```
 
+## 任意值
+
+任意值（Any）用来表示允许赋值为任意类型。
+
+### 什么是任意值类型
+
+如果是一个普通类型，在赋值过程中改变类型是不被允许的：
+
+```typescript
+let myFavoriteNumber: string = 'seven';
+myFavoriteNumber = 7;
+// Type 'number' is not assignable to type 'string'.
+```
+
+但如果是 any 类型，则允许被赋值为任意类型。
+
+```typescript
+let myFavoriteNumber: any = 'seven';
+myFavoriteNumber = 7;
+```
+
+### 任意值的属性和方法
+
+在任意值上访问任何属性都是允许的：
+

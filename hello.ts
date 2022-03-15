@@ -56,3 +56,12 @@
 // let num: number = u;
 // Type 'void' is not assignable to type 'number'.
 
+
+
+// 任意值
+// let myFavoriteNumber: string = 'seven';
+// myFavoriteNumber = 7;
+// // Type 'number' is not assignable to type 'string'.
+
+// let myFavoriteNumber: any = 'seven';
+// myFavoriteNumber = 7;
