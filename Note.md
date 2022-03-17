@@ -373,3 +373,51 @@ aNum = 7;
 
 联合类型（Union Types）表示取值可以为多种类型中的一种。
 
+### 简单例子
+
+````typescript
+let aNum: string | number;
+aNum = 'seven';
+aNum = 7;
+````
+
+```typescript
+let aNum: string | number;
+aNum = true;
+// Type 'boolean' is not assignable to type 'string | number'
+```
+
+| 表示允许访问的类型是 string 或 number
+
+### 访问联合类型的属性或方法
+
+当 TypeScript 不确定一个联合类型的变量到底是哪个类型时，**只能访问此联合类型的所有类型里共有的属性或方法**
+
+```typescript
+function getLength(something: string | number): number {
+  return something.length;
+}
+// Property 'length' does not exist on type 'string | number'.
+// Property 'length' does not exist on type 'number'
+```
+
+上述，length 不是 string 和 number 的共有属性，因此会报错。访问 string  和 number 的公共属性不会报错：
+
+```typescript
+function getString(something: string | number): string {
+  return something.toString();
+}
+```
+
+联合类型的变量在被赋值时候，会根据类型推论的规则推断出一个类型：
+
+````typescript
+let aNum: string | number;
+aNum = 'seven';
+console.log(aNum.length); // 5
+aNum = 7;
+console.log(aNum.length); // 报错
+// Property 'length' does not exist on type 'number'
+````
+
+第二行 aNum 被推断为 string，访问 length 属性不会报错。第四行的 aNum 被推断为 number，访问 length  属性会报错。

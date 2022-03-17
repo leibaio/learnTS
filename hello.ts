@@ -89,6 +89,33 @@
 // aNum = 7;
 
 // 定义时候没有赋值，会被推断为 any 类型
-let aNum;
+// let aNum;
+// aNum = 'seven';
+// aNum = 7;
+
+
+
+// 联合类型
+// let aNum: string | number;
+// aNum = 'seven';
+// aNum = 7;
+// aNum = true;
+
+// 访问联合类型的属性或方法
+// function getLength(something: string | number): number {
+//   return something.length;
+// }
+// // Property 'length' does not exist on type 'string | number'.
+// // Property 'length' does not exist on type 'number'
+
+// function getString(something: string | number): string {
+//   return something.toString();
+// }
+
+
+let aNum: string | number;
 aNum = 'seven';
+console.log(aNum.length);
 aNum = 7;
+console.log(aNum.length);
+// Property 'length' does not exist on type 'number'
