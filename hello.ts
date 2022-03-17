@@ -78,7 +78,17 @@
 // anyThing.myName.setFirstName('Cat');
 
 // 未声明类型的变量
-let something;
-something = 'seven';
-something = 7;
-something.sayName('Tom');
+// let something;
+// something = 'seven';
+// something = 7;
+// something.sayName('Tom');
+
+
+// 类型推论
+// let aNum = 'seven';
+// aNum = 7;
+
+// 定义时候没有赋值，会被推断为 any 类型
+let aNum;
+aNum = 'seven';
+aNum = 7;

@@ -338,5 +338,38 @@ something = 7;
 something.sayName('Tom');
 ```
 
+## 类型推论
 
+如果没有明确的指定类型，TypeScript 会依照类型推论 （Type Inference）的规则推断出一个类型。
+
+### 什么是类型推论
+
+以下代码虽然没有指定类型，但是在编译时会报错：
+
+```typescript
+let aNum = 'seven';
+aNum = 7;
+// Type 'number' is not assignable to type 'string'
+```
+
+事实上，它等价于
+
+```typescript
+let aNum: string = 'seven';
+aNUm = 7;
+```
+
+TypeScript 会在没有明确的指定类型时推测出一个类型。
+
+**如果定义时候没有赋值，不管之后有没有赋值，都会被推断为 any 类型而完全不被类型检查**
+
+```typescript
+let aNum;
+aNum = 'seven';
+aNum = 7;
+```
+
+## 联合类型
+
+联合类型（Union Types）表示取值可以为多种类型中的一种。
 
