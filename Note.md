@@ -301,3 +301,42 @@ myFavoriteNumber = 7;
 
 在任意值上访问任何属性都是允许的：
 
+```typescript
+let anyThing: any = 'hello';
+console.log(anyThing.myName);
+console.log(anyThing.myName.firstName);
+```
+
+也允许调用任何方法：
+
+```typescript
+let anyThing: any = 'Tom';
+anyThing.setName('Jerry');
+anyThing.setName('Jerry').sayHello();
+anyThing.myName.setFirstName('Cat');
+```
+
+ 声明一个变量为任意值后，对其任何操作，返回的内容的类型都是任意值
+
+### 未声明类型的变量
+
+变量如果在声明的时候，未指定其类型，那么会被识别为任意值类型
+
+```typescript
+let something;
+something = 'seven';
+something = 7;
+something.sayName('Tom');
+```
+
+等价于
+
+```typescript
+let something: any;
+something = 'seven';
+something = 7;
+something.sayName('Tom');
+```
+
+
+
