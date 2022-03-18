@@ -608,3 +608,102 @@ tom.id = 1234;
 ```
 
 两处错误，一处是对 tom 进行赋值是，没有给 id 赋值。第二处是 tom.id 是只读属性。
+
+## 数组的类型
+
+数组类型有多种定义方法
+
+### [类型 + 方括号] 表示法
+
+````typescript
+let fibonacci: number[] = [1, 1, 2, 3, 5];
+````
+
+不允许出现其他类型：
+
+```typescript
+let fibonacci: number[] = [1, '1', 2, 3, 5];
+// Type 'string' is not assignable to type 'number'
+```
+
+数组的一些方法的参数也会根据数组在定义时约定的类型进行限制：
+
+```typescript
+let fibonacci: number[] = [1, 1, 2, 3, 5];
+fibonacci.push(8);
+fibonacci.push('8');
+// Argument of type 'string' is not assignable to parameter of type 'number'.ts
+```
+
+push 方法只允许传入 number 类型的参数，此时传入的是一个字符串字面量类型。
+
+### 数组泛型
+
+可以使用数组泛型（Array Generic） Array<elemType> 来表示数组：
+
+````typescript
+let fibonacci: Array<number> = [1, 1, 2, 3, 5]:
+````
+
+### 用接口描述数组
+
+```typescript
+interface NumberArray {
+  [index: number]: number;
+}
+let fibonacci: NumberArray = [1, 1, 2, 3, 5];
+```
+
+虽然可以使用接口描述数组，但是一般不选择，比较复杂。但有一种情况例外，用来表示类数组。
+
+### 类数组
+
+类数组（Array-like Object）不是数组类型，比如 arguments:
+
+```typescript
+function sum() {
+    let args: numbers[] = arguments;
+}
+// Type 'IArguments' is missing the following properties from type 'numbers[]': pop, push, concat, join, and 26 more
+```
+
+上述中，arguments 是一个类数组，不能用普通数组方式描述，使用接口：
+
+```typescript
+function sum() {
+  let args: {
+    [index: number]: number;
+    length: number;
+    callee: Function;
+  } = arguments;
+}
+```
+
+在例子中，除了约束当索引类型是数字时，值类型也是数字外，也约束了还有 length  和 callee 属性；
+
+常用的类数组都有自己的接口定义，比如 IArguments, NodeList, HTMLCollection 等
+
+```typescript
+function sum() {
+  let args: IArguments = arguments;
+}
+```
+
+其中，IArguments 是 TypeScript 中定义好的类型，实际上就是
+
+```typescript
+interface IArguments {
+  [index: number]: number;
+  length: number;
+  callee: Function;
+}
+```
+
+### any 在数组中的应用
+
+用 any 表示数组中允许出现任意类型：
+
+````typescript
+let list: any[] = ['xxx', 23, { website: 'https://leibaio.space' }]
+````
+

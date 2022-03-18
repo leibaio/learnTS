@@ -56,7 +56,98 @@
 // anyThing.setName('Jerry').sayHello();
 // anyThing.myName.setFirstName('Cat');
 // 未声明类型的变量
-// var something;
+// let something;
 // something = 'seven';
 // something = 7;
 // something.sayName('Tom');
+// 类型推论
+// let aNum = 'seven';
+// aNum = 7;
+// 定义时候没有赋值，会被推断为 any 类型
+// let aNum;
+// aNum = 'seven';
+// aNum = 7;
+// 联合类型
+// let aNum: string | number;
+// aNum = 'seven';
+// aNum = 7;
+// aNum = true;
+// 访问联合类型的属性或方法
+// function getLength(something: string | number): number {
+//   return something.length;
+// }
+// // Property 'length' does not exist on type 'string | number'.
+// // Property 'length' does not exist on type 'number'
+// function getString(something: string | number): string {
+//   return something.toString();
+// }
+// let aNum: string | number;
+// aNum = 'seven';
+// console.log(aNum.length);
+// aNum = 7;
+// console.log(aNum.length);
+// Property 'length' does not exist on type 'number'
+// 接口
+// interface Person {
+//   name: string;
+//   age: number;
+// }
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// };
+// Type '{ name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Object literal may only specify known properties, and 'gender' does not exist in type 'Person'.ts(2322)
+// 可选属性
+// interface Person {
+//   name: string;
+//   age?: number;
+// }
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// }
+// 任意属性
+// interface Person {
+//   name: string;
+//   age?: number;
+//   [propName: string]: string | number;
+// }
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// }
+// 只读属性
+// interface Person {
+//   readonly id: number;
+//   name: string;
+//   age?: number;
+//   [propName: string]: any;
+// }
+// let tom: Person = {
+//   id: 89757,
+//   name: 'Tom',
+//   gender: 'male'
+// };
+// tom.id = 12343;
+// interface Person {
+//   readonly id: number;
+//   name: string;
+//   age?: number;
+//   [propName: string]: any;
+// }
+// let tom: Person = {
+//   name: 'Tom',
+//   gender: 'male'
+// };
+// tom.id = 1234;
+// 数组类型
+// let fibonacci: number[] = [1, 1, 2, 3, 5];
+// let fibonacci: number[] = [1, '1', 2, 3, 5];
+// Type 'string' is not assignable to type 'number'
+// var fibonacci = [1, 1, 2, 3, 5];
+// fibonacci.push(8);
+// fibonacci.push('8');
