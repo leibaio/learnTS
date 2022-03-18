@@ -7,4 +7,4 @@
 // foo.split(' ');
 // Property 'split' does not exist on type 'number'
 // TypeScript 是弱类型
-console.log(1 + '1');
+// console.log(1 + '1');

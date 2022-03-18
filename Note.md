@@ -421,3 +421,190 @@ console.log(aNum.length); // 报错
 ````
 
 第二行 aNum 被推断为 string，访问 length 属性不会报错。第四行的 aNum 被推断为 number，访问 length  属性会报错。
+
+## 对象的类型 -- 接口
+
+使用接口（interfaces）定义对象的类型。
+
+### 什么是接口
+
+面向对象中，接口是对行为的抽象，具体如何行动需要由类（classes）实现（implement）
+
+### 简单例子
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+let tom: Person = { // = 号
+  name: 'Tom',
+  age: 25
+};
+```
+
+上述中，定义了一个接口 Person，然后定义一个变量 tom，类型是 Person。约束 tom 的形状必须和接口 Person 保持一致。
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+let tom: Person = {
+  name: 'Tom',
+  // age: 25
+};
+// Property 'age' is missing in type '{ name: string; }' but required in type 'Person'.ts(2741)
+// hello.ts(128, 3): 'age' is declared here.
+```
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+let tom: Person = {
+  name: 'Tom',
+  age: 25,
+  gender: 'male'
+};
+// Type '{ name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Object literal may only specify known properties, and 'gender' does not exist in type 'Person'.ts(2322)
+```
+
+赋值时比接口少属性或者多属性都会报错。
+
+### 可选属性
+
+若不要完全匹配一个形状，使用可选属性
+
+```typescript
+interface Person {
+    name: string;
+    age?: number;
+}
+
+let tom: Person = {
+    name: 'Tom'
+};
+```
+
+````typescript
+interface Person {
+    name: string;
+    age?: number;
+}
+
+let tom: Person = {
+    name: 'Tom',
+    age: 25
+};
+````
+
+可选属性的含义是该属性可以不存在，但仍不许添加未定义的属性：
+
+```typescript
+interface Person {
+    name: string;
+    age?: number;
+}
+
+let tom: Person = {
+    name: 'Tom',
+    age: 25,
+    gender: 'male'
+}
+// Type '{ name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Object literal may only specify known properties, and 'gender' does not exist in type 'Person'.ts(2322)
+```
+
+###   任意属性
+
+一个接口允许有任意的属性，使用如下方式：
+
+````typescript
+interface Person {
+    name: string;
+    age?: number;
+    [propName: string]: string;
+}
+
+let tom: Person {
+    name: 'Tom',
+    age: 25,
+    gender: 'male'
+}
+
+// index.ts(3,5): error TS2411: Property 'age' of type 'number' is not assignable to string index type 'string'.
+// index.ts(7,5): error TS2322: Type '{ [x: string]: string | number; name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Index signatures are incompatible.
+//     Type 'string | number' is not assignable to type 'string'.
+//       Type 'number' is not assignable to type 'string'.
+````
+
+任意属性的值允许是 string，但是可选属性 age 值是 number， number 不是 string 的子属性 ，因此报错。
+
+一个接口中只能定义一种任意属性。如果接口中有多个类型的属性，则可以在任意属性中使用联合类型：
+
+```typescript
+interface Person {
+  name: string;
+  age?: number;
+  [propName: string]: string | number;
+}
+
+let tom: Person = {
+  name: 'Tom',
+  age: 25,
+  gender: 'male'
+}
+```
+
+### 只读属性
+
+对象中一些字段只能在创建的时候被赋值，可以用 readonly 定义只读属性：
+
+```typescript
+interface Person {
+    readonly id: number;
+    name: string;
+    age?: number;
+    [propName: string]: any;
+}
+
+let tom: Person = {
+    id: 89757,
+    name: 'Tom',
+    gender: 'male'
+};
+
+tom.id = 12343;
+// Cannot assign to 'id' because it is a read-only property.ts(2540)
+```
+
+使用 readonly 定义的 id 被初始化后，又被赋值，因此报错。
+
+只读的约束存在于第一次给对象赋值时，而不是第一次给只读属性赋值时
+
+```typescript
+interface Person {
+  readonly id: number;
+  name: string;
+  age?: number;
+  [propName: string]: any;
+}
+
+let tom: Person = {
+  name: 'Tom',
+  gender: 'male'
+};
+
+tom.id = 1234;
+// Property 'id' is missing in type '{ name: string; gender: string; }' but required in type 'Person'.ts(2741)
+// Cannot assign to 'id' because it is a read-only property.
+```
+
+两处错误，一处是对 tom 进行赋值是，没有给 id 赋值。第二处是 tom.id 是只读属性。

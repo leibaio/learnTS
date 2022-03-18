@@ -113,9 +113,85 @@
 // }
 
 
-let aNum: string | number;
-aNum = 'seven';
-console.log(aNum.length);
-aNum = 7;
-console.log(aNum.length);
+// let aNum: string | number;
+// aNum = 'seven';
+// console.log(aNum.length);
+// aNum = 7;
+// console.log(aNum.length);
 // Property 'length' does not exist on type 'number'
+
+
+
+// 接口
+// interface Person {
+//   name: string;
+//   age: number;
+// }
+
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// };
+// Type '{ name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Object literal may only specify known properties, and 'gender' does not exist in type 'Person'.ts(2322)
+
+
+// 可选属性
+// interface Person {
+//   name: string;
+//   age?: number;
+// }
+
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// }
+
+
+// 任意属性
+// interface Person {
+//   name: string;
+//   age?: number;
+//   [propName: string]: string | number;
+// }
+
+// let tom: Person = {
+//   name: 'Tom',
+//   age: 25,
+//   gender: 'male'
+// }
+
+
+// 只读属性
+// interface Person {
+//   readonly id: number;
+//   name: string;
+//   age?: number;
+//   [propName: string]: any;
+// }
+
+// let tom: Person = {
+//   id: 89757,
+//   name: 'Tom',
+//   gender: 'male'
+// };
+
+// tom.id = 12343;
+
+
+
+// interface Person {
+//   readonly id: number;
+//   name: string;
+//   age?: number;
+//   [propName: string]: any;
+// }
+
+// let tom: Person = {
+//   name: 'Tom',
+//   gender: 'male'
+// };
+
+// tom.id = 1234;
