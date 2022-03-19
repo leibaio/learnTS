@@ -148,6 +148,73 @@
 // let fibonacci: number[] = [1, 1, 2, 3, 5];
 // let fibonacci: number[] = [1, '1', 2, 3, 5];
 // Type 'string' is not assignable to type 'number'
-// var fibonacci = [1, 1, 2, 3, 5];
+// let fibonacci: number[] = [1, 1, 2, 3, 5];
 // fibonacci.push(8);
 // fibonacci.push('8');
+// 数组泛型
+// let fibonacci: Array<number> = [1, 1, 2, 3, 5]:
+// 用接口表示数组
+// interface NumberArray {
+//   [index: number]: number;
+// }
+// let fibonacci: NumberArray = [1, 1, 2, 3, 5];
+// function sum() {
+//   let args: numbers[] = arguments;
+// }
+// function sum() {
+//   let args: {
+//     [index: number]: number;
+//     length: number;
+//     callee: Function;
+//   } = arguments;
+// }
+// function sum() {
+//   let args: IArguments = arguments;
+// }
+// interface IArguments {
+//   [index: number]: number;
+//   length: number;
+//   callee: Function;
+// }
+// let list: any[] = ['xxx', 23, { website: 'https://leibaio.space' }]
+// 函数声明
+// function sum(x: number, y: number): number {
+//   return x + y;
+// }
+// sum(1);
+// sum(1, 2, 3);
+// 函数表达式
+// let mySum = function (x: number, y: number): number {
+//   return x + y;
+// }
+// 手动添加类型
+// let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
+//   return x + y;
+// }
+// 使用接口定义函数的形状
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+// }
+// let mySearch: SearchFunc;
+// mySearch = function(source: string, subString: string) {
+//   return source.search(subString) !== -1;
+// }
+// 可选参数
+// function buildName(firstName, lastName) {
+//     if (lastName) {
+//         return firstName + ' ' + lastName;
+//     }
+//     else {
+//         return firstName;
+//     }
+// }
+// var tomcat = buildName('Tom', 'Cat');
+// var tom = buildName('Tom');
+// function push(array, ...items) {
+//   items.forEach(function(item) {
+//     array.push(item);
+//   })
+// }
+
+// let a = [];
+// push(a, 1, 2, 3);

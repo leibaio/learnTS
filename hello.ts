@@ -244,3 +244,120 @@
 
 
 // let list: any[] = ['xxx', 23, { website: 'https://leibaio.space' }]
+
+
+
+
+// 函数声明
+// function sum(x: number, y: number): number {
+//   return x + y;
+// }
+
+// sum(1);
+// sum(1, 2, 3);
+
+// 函数表达式
+// let mySum = function (x: number, y: number): number {
+//   return x + y;
+// }
+
+// 手动添加类型
+// let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
+//   return x + y;
+// }
+
+// 使用接口定义函数的形状
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+// }
+
+// let mySearch: SearchFunc;
+// mySearch = function(source: string, subString: string) {
+//   return source.search(subString) !== -1;
+// }
+
+
+// 可选参数
+// function buildName(firstName: string, lastName?: string) {
+//   if (lastName) {
+//     return firstName + ' ' + lastName;
+//   } else {
+//     return firstName;
+//   }
+// }
+// let tomcat = buildName('Tom', 'Cat');
+// let tom = buildName('Tom');
+
+
+// function buildName(firstName?: string, lastName: string) {
+//   if (firstName) {
+//     return firstName + ' ' + lastName;
+//   } else {
+//       return lastName;
+//   }
+// }
+// let tomcat = buildName('Tom', 'Cat');
+// let tom = buildName(undefined, 'Tom');
+// // A required parameter cannot follow an optional parameter
+
+
+
+// 参数默认值
+// function buildName(firstName: string, lastName: string = 'Cat') {
+//   return firstName + ' ' + lastName
+// }
+// let tomcat = buildName('Tom', 'Cat');
+// let tom = buildName('Tom');
+
+// function buildName(firstName: string = 'Tom', lastName: string) {
+//   return firstName + ' ' + lastName
+// }
+// let tomcat = buildName('Tom', 'Cat');
+// let cat = buildName(undefined, 'cat');
+
+
+
+// 剩余参数
+// function push(array, ...items) {
+//   items.forEach(function(item) {
+//     array.push(item);
+//   })
+// }
+
+// let a: any[] = [];
+// push(a, 1, 2, 3);
+
+
+// 数组类型定义
+// function push(array: any[], ...items: any[]) {
+//   items.forEach(function(item) {
+//     array.push(item);
+//   })
+// }
+
+// let a = [];
+// push(a, 1, 2, 3);
+
+
+
+// 重载
+// 利用联合类型实现 reverse
+// function reverse(x: number | string): number | string | void {
+//   if (typeof x === 'number') {
+//     return Number(x.toString().split('').reverse().join(''));
+//   } else if (typeof x === 'string') {
+//     return x.split('').reverse().join('');
+//   }
+// }
+
+
+// 利用重载实现 reverse
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string | void {
+  if (typeof x === 'number') {
+    return Number(x.toString().split('').reverse().join(''));
+  } else if (typeof x === 'string') {
+      return x.split('').reverse().join('');
+  }
+}

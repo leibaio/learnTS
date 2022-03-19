@@ -707,3 +707,190 @@ interface IArguments {
 let list: any[] = ['xxx', 23, { website: 'https://leibaio.space' }]
 ````
 
+## 函数的类型
+
+### 函数声明
+
+JS 中，有两种常见的定义函数的方式 -- 函数声明（Function Declaration）和函数表达式（Function Expression）：
+
+````javascript
+// 函数声明
+function sum(x, y) {
+    return x + y;
+}
+
+// 函数表达式
+function mySum = function (x, y) {
+    return x + y;
+}
+````
+
+一个函数有输入和输出，要在 TypeScript 中对其进行约束，要把输入和输出都考虑到，函数声明的类型定义比较简单：
+
+````typescript
+function sum(x: number, y: number): number {
+  return x + y;
+}
+````
+
+参数多余或者少于要求都不被允许。
+
+```typescript
+function sum(x: number, y: number): number {
+  return x + y;
+}
+
+sum(1); // Expected 2 arguments, but got 1
+sum(1, 2, 3); // Expected 2 arguments, but got 3
+```
+
+### 函数表达式
+
+```typescript
+let mySum = function (x: number, y: number): number {
+  return x + y;
+}
+```
+
+这样可以通过编译，但是代码是对等号右侧的匿名函数进行类型定义，等号左边的 mySum 是通过赋值操作进行类型推论而判断出来的。如果手动加类型，应该如下所示：
+
+```typescript
+let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
+    return x + y;
+}
+```
+
+TS 中的类型定义中，=> 表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
+
+和 ES6 中箭头函数区别出来。
+
+### 使用接口定义函数的形状
+可以使用接口定义一个函数需要符合的形状
+
+```typescript
+interface SearchFunc {
+  (source: string, subString: string): boolean;
+}
+
+let mySearch: SearchFunc;
+mySearch = function(source: string, subString: string) {
+  return source.search(subString) !== -1;
+}
+```
+
+### 可选参数
+输入多余或者少于要求的参数，不允许。定义可选参数与接口中可选属性类似，使用 ? 表示可选参数:
+
+```typescript
+function buildName(firstName: string, lastName?: string) {
+  if (lastName) {
+    return firstName + ' ' + lastName;
+  } else {
+    return firstName;
+  }
+}
+let tomcat = buildName('Tom', 'Cat');
+let tom = buildName('Tom');
+```
+
+**可选参数必须接在必需参数后面**
+
+```typescript
+function buildName(firstName?: string, lastName: string) {
+  if (firstName) {
+    return firstName + ' ' + lastName;
+  } else {
+      return lastName;
+  }
+}
+let tomcat = buildName('Tom', 'Cat');
+let tom = buildName(undefined, 'Tom');
+// A required parameter cannot follow an optional parameter
+```
+
+### 参数默认值
+ES6 中，允许给函数的参数添加默认值，TypeScript 会将添加了默认值的参数识别为可选参数：
+
+```typescript
+function buildName(firstName: string, lastName: string = 'Cat') {
+  return firstName + ' ' + lastName
+}
+let tomcat = buildName('Tom', 'Cat');
+let tom = buildName('Tom');
+```
+
+此时就不受「可选函数必须接在必需函数后面」的限制
+
+```typescript
+function buildName(firstName: string = 'Tom', lastName: string) {
+  return firstName + ' ' + lastName
+}
+let tomcat = buildName('Tom', 'Cat');
+let cat = buildName(undefined, 'cat');
+```
+
+### 剩余参数
+ES6 中，可以使用 ...rest 的方式获取函数中的剩余参数（rest参数）：
+
+```typescript
+function push(array, ...items) {
+  items.forEach(function(item) {
+    array.push(item);
+  })
+}
+
+let a: any[] = [];
+push(a, 1, 2, 3);
+```
+
+items 是一个数组，可以使用数组的类型来定义它：
+
+```typescript
+function push(array: any[], ...items: any[]) {
+  items.forEach(function(item) {
+    array.push(item);
+  })
+}
+
+let a = [];
+push(a, 1, 2, 3);
+```
+
+rest 参数只能是最后一个参数
+
+### 重载
+重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
+
+比如需要实现一个函数 reverse ，输入 123 返回 321，输入字符串 'hello' 返回字符串 'olleh'。
+
+利用联合类型，可以实现
+
+```typescript
+function reverse(x: number | string): number | string | void {
+  if (typeof x === 'number') {
+    return Number(x.toString().split('').reverse().join(''));
+  } else if (typeof x === 'string') {
+    return x.split('').reverse().join('');
+  }
+}
+```
+
+但是这样有一个缺点，就是不能够精确的表达，输入为数字时候，输出应该也为数字，输入为字符串，输出也为字符串。
+
+此时可以使用重载定义多个 reverse 的函数类型：
+
+```typescript
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string | void {
+  if (typeof x === 'number') {
+    return Number(x.toString().split('').reverse().join(''));
+  } else if (typeof x === 'string') {
+      return x.split('').reverse().join('');
+  }
+}
+```
+
+上述中，重复定义多次 reverse 函数，前几次是函数定义，最后一次是函数实现。
+
+注意，TS 会优先从最前面的函数定义开始匹配，所以多个函数定义如果有包含关系，需要优先把精确的定义写在前面.
