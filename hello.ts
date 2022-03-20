@@ -352,12 +352,160 @@
 
 
 // 利用重载实现 reverse
-function reverse(x: number): number;
-function reverse(x: string): string;
-function reverse(x: number | string): number | string | void {
-  if (typeof x === 'number') {
-    return Number(x.toString().split('').reverse().join(''));
-  } else if (typeof x === 'string') {
-      return x.split('').reverse().join('');
-  }
+// function reverse(x: number): number;
+// function reverse(x: string): string;
+// function reverse(x: number | string): number | string | void {
+//   if (typeof x === 'number') {
+//     return Number(x.toString().split('').reverse().join(''));
+//   } else if (typeof x === 'string') {
+//       return x.split('').reverse().join('');
+//   }
+// }
+
+
+// 类型断言
+// 访问联合类型的属性或方法
+// interface Cat {
+//   name: string;
+//   run(): void;
+// }
+// interface Fish {
+//   name: string;
+//   swim(): void;
+// }
+
+// function getName(animal: Cat | Fish) {
+//   return animal.name;
+// }
+
+
+// // 不确定类型时访问其中一个类型特有属性或方法
+// interface Cat {
+//   name: string;
+//   run(): void;
+// }
+// interface Fish {
+//   name: string;
+//   swim(): void;
+// }
+
+// function isFish(animal: Cat | Fish) {
+//   if (typeof animal.swim === 'function') {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+// // Property 'swim' does not exist on type 'Cat | Fish'.
+// // Property 'swim' does not exist on type 'Cat'
+
+// // 使用断言
+// interface Cat {
+//   name: string;
+//   run(): void;
+// }
+// interface Fish {
+//   name: string;
+//   swim(): void;
+// }
+
+// function isFish(animal: Cat | Fish) {
+//   if (typeof (animal as Fish).swim === 'function') {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+
+
+// 将一个父类断言为更加具体的子类
+// class ApiError extends Error {
+//   code: number = 0;
+// }
+// class HttpError extends Error {
+//   statusCode: number = 200;
+// }
+
+// function isApiError(error: Error) {
+//   if (typeof (error as ApiError).code === 'number') {
+//     return true;
+//   }
+//   return false;
+// }
+
+
+// 使用 instanceof 判断是否是ApiError
+// class ApiError extends Error {
+//   code: number = 0;
+// }
+// class HttpError extends Error {
+//   statusCode: number = 200;
+// }
+
+// function isApiError(error: Error) {
+//   if (error instanceof ApiError) {
+//     return true;
+//   }
+//   return false;
+// }
+
+
+// 当 ApiError 和 HttpError 是接口时
+// interface ApiError extends Error {
+//   code: number;
+// }
+// interface HttpError extends Error {
+//   statusCode: number;
+// }
+
+// function isApiError(error: Error) {
+//   if (error instanceof ApiError) {
+//     return true;
+//   }
+//   return false;
+// }
+// // 'ApiError' only refers to a type, but is being used as a value here.ts(2693)
+
+
+// 使用类型断言，判断是否存在
+// interface ApiError extends Error {
+//   code: number;
+// }
+// interface HttpError extends Error {
+//   statusCode: number;
+// }
+
+// function isApiError(error: Error) {
+//   if (typeof (error as ApiError).code === 'number') {
+//     return true;
+//   }
+//   return false;
+// }
+
+
+
+// 将任意类型断言为 any
+// const foo: number = 1;
+// foo.length = 1;
+// // Property 'length' does not exist on type 'number'.ts(2339)
+
+
+// window.foo = 1;
+// // Property 'foo' does not exist on type 'Window & typeof globalThis'.ts(2339)
+
+// 使用 as any 临时断言
+// (window as any).foo = 1;
+
+
+// 将 any 断言为一个具体的类型
+function getCacheData(key: string): any {
+  return (window as any).cache[key];
 }
+
+interface Cat {
+  name: string;
+  run(): void;
+}
+
+const tom = getCacheData('tom') as Cat;
+tom.run();

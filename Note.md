@@ -894,3 +894,223 @@ function reverse(x: number | string): number | string | void {
 上述中，重复定义多次 reverse 函数，前几次是函数定义，最后一次是函数实现。
 
 注意，TS 会优先从最前面的函数定义开始匹配，所以多个函数定义如果有包含关系，需要优先把精确的定义写在前面.
+
+## 类型断言
+
+类型断言（Type Assertion）可以用来手动指定一个值的类型。
+
+### 语法
+
+值 as 类型    或者    <类型>值
+
+在 tsx 语法（React 的 jsx 语法的 ts 版）中必须使用前者，及 值 as 类型。
+
+形如 <Foo> 的语法在 tsx 中表示的是一个 ReactNode，在 ts 中除了表示类型断言外，可能表示一个泛行。
+
+因此建议统一使用 值 as 类型 这一语法。
+
+### 类型断言的用途
+
+类型断言常见用途有以下几种
+
+#### 将一个联合类型断言为其中一个类型
+
+当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候，只能访问此联合类型的所有类型的共有属性或方法。
+
+```typescript
+interface Cat {
+  name: string;
+  run(): void;
+}
+interface Fish {
+  name: string;
+  swim(): void;
+}
+
+function getName(animal: Cat | Fish) {
+  return animal.name;
+}
+```
+
+有时候，确实需要在还不确定类型的时候就访问其中一个类型特有的属性或方法，比如：
+
+```typescript
+// 不确定类型时访问其中一个类型特有属性或方法
+interface Cat {
+  name: string;
+  run(): void;
+}
+interface Fish {
+  name: string;
+  swim(): void;
+}
+
+function isFish(animal: Cat | Fish) {
+  if (typeof animal.swim === 'function') {
+    return true;
+  } else {
+    return false;
+  }
+}
+// Property 'swim' does not exist on type 'Cat | Fish'.
+// Property 'swim' does not exist on type 'Cat'
+```
+
+上述在获取 animal.swim 时候会报错。此时可以使用类型断言，将 animal 断言成 Fish：
+
+```typescript
+interface Cat {
+  name: string;
+  run(): void;
+}
+interface Fish {
+  name: string;
+  swim(): void;
+}
+
+function isFish(animal: Cat | Fish) {
+  if (typeof (animal as Fish).swim === 'function') {
+    return true;
+  } else {
+    return false;
+  }
+}
+```
+
+就可以解决访问 animal.swim 的报错问题。但是类型断言只能 欺骗 TS 编译器，无法避免运行时候的错误。
+
+#### 将一个父类断言为更加具体的子类
+
+当类之间有继承关系时，类型断言也比较常见：
+
+```typescript
+class ApiError extends Error {
+  code: number = 0;
+}
+class HttpError extends Error {
+  statusCode: number = 200;
+}
+
+function isApiError(error: Error) {
+  if (typeof (error as ApiError).code === 'number') {
+    return true;
+  }
+  return false;
+}
+```
+
+上述例子中，声明了函数 isApiError，用来判断输入的参数是否是 ApiError 类型。为了实现这样的一个函数，它的参数类型是比较抽象的父类 Error，这样函数就能接受 Error 或者它的子类作为参数。
+
+但由于父类 Error 中没有 code 属性，直接获取 error.code 会报错，需要使用类型断言获取 (error as ApiError).code。
+
+可以使用 instanceof 判断是否是 ApiError：
+
+```typescript
+class ApiError extends Error {
+  code: number = 0;
+}
+class HttpError extends Error {
+  statusCode: number = 200;
+}
+
+function isApiError(error: Error) {
+  if (error instanceof ApiError) {
+    return true;
+  }
+  return false;
+}
+```
+
+在此例子中，使用 instanceof 更加合适，因为 ApiError 是一个 JS 的类，能够通过 instanceof 判断 error 是否是它的实例。
+
+但是有的情况下， ApiError 和 HttpError 不是一个真正的类，而只是一个 TypeScript 的接口（interface），接口是一个类型，不是真正的值，在编译结果中会被删除，就无法使用 instanceof 做运行时的判断：
+
+```typescript
+interface ApiError extends Error {
+  code: number;
+}
+interface HttpError extends Error {
+  statusCode: number;
+}
+
+function isApiError(error: Error) {
+  if (error instanceof ApiError) {
+    return true;
+  }
+  return false;
+}
+// 'ApiError' only refers to a type, but is being used as a value here.ts(2693)
+```
+
+此时就只能用类型断言，通过判断是否存在 code 属性判断，来判断传入的是否是 ApiError：
+
+```typescript
+interface ApiError extends Error {
+  code: number;
+}
+interface HttpError extends Error {
+  statusCode: number;
+}
+
+function isApiError(error: Error) {
+  if (typeof (error as ApiError).code === 'number') {
+    return true;
+  }
+  return false;
+}
+```
+
+#### 将任何一个类型断言为 any
+
+理想情况下，TS 类型系统运转良好，每个值类型具体而精确。当引用一个在此类型上不存在的属性或方法时，就会报错：
+
+```typescript
+const foo: number = 1;
+foo.length = 1;
+// Property 'length' does not exist on type 'number'.ts(2339)
+```
+
+显然数字类型变量 foo 没有 length 属性，TS 给出相应提示，这很有用。但有的时候，非常确定这段代码不会出错，比如以下：
+
+```typescript
+window.foo = 1;
+// Property 'foo' does not exist on type 'Window & typeof globalThis'.ts(2339)
+```
+
+上述例子中，需要在 window 上加一个 foo 属性，但是 TS 编译会报错，提示 window 上不存在 foo 属性。此时可以使用 as any 临时将 window 断言为 any 类型：
+
+```typescript
+(window as any).foo = 1;
+```
+
+在 any 类型的变量上，访问任何属性都是允许的。但是将变量断言为 any 可以说是解决 TS 类型问题的最后一个手段。极有可能掩盖真正的类型错误。
+
+#### 将 any 断言为一个具体的类型
+
+断言问题，可以通过类型断言及时把 any 断言为精确的类型，使代码向着高质量可维护目标发展。
+
+举例，遗留代码中有一个 getCacheData，它的返回值是 any
+
+```typescript
+function getCacheData(key: string): any {
+  return (window as any).cache[key];
+}
+```
+
+在使用时，最好将调用其之后的返回值断言为一个精确的类型，方便后续的操作：
+
+```typescript
+function getCacheData(key: string): any {
+  return (window as any).cache[key];
+}
+
+interface Cat {
+  name: string;
+  run(): void;
+}
+
+const tom = getCacheData('tom') as Cat;
+tom.run();
+```
+
+调用完 getCacheData 后，立即断言为 Cat 类型。明确了 tom 的类型，后续对 tom 的访问就有了代码补全。
