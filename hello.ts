@@ -536,7 +536,28 @@
 
 
 // 声明语句只能定义类型，不要具体实现
-declare const jQuery = function(selector) {
-  return document.querySelector(selector);
-};
-// A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.ts(1254)
+// declare const jQuery = function(selector) {
+//   return document.querySelector(selector);
+// };
+// // A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.ts(1254)
+
+
+
+// 内置对象
+// let b: Boolean = new Boolean(1);
+// let c: Error = new Error('Error Occurred');
+// let d: Date = new Date();
+// let r: RegExp = /[a-z]/;
+
+
+// DOM 和 BOM 的内置对象
+// let body: HTMLElement = document.body;
+// let allDiv: NodeList = document.querySelectorAll('div');
+// document.addEventListener('click', function(e: MouseEvent) {
+//   // Do something
+// })
+
+
+// TS 核心库的定义文件
+
+Math.pow(10, 2)

@@ -1257,3 +1257,46 @@ declare const jQuery = function(selector) {
 };
 // A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.ts(1254)
 ```
+
+
+## 内置对象
+
+### ECMAScript 的内置对象
+
+ECMAScript 标准提供的内置对象有：`Boolean`、`Error`、`Date`、`RegExp` 等。可以在 TS 中将变量定义为这些类型：
+
+```typescript
+let b: Boolean = new Boolean(1);
+let c: Error = new Error('Error Occurred');
+let d: Date = new Date();
+let r: RegExp = /[a-z]/;
+```
+
+### DOM 和 BOM 的内置对象
+
+Document、HTMLElement、Event、NodeList 等
+
+```typescript
+let body: HTMLElement = document.body;
+let allDiv: NodeList = document.querySelectorAll('div');
+document.addEventListener('click', function(e: MouseEvent) {
+  // Do something
+})
+```
+
+### TS 核心库的定义文件
+
+在使用常用的方法时，TS 实际上已经做了很多类型判断
+
+```typescript
+
+Math.pow(10, 2)
+```
+
+### 用 TS 写 Node.js
+
+Node.js 不是内置对象的一部分，如果用 TS 写 Node.js，需要使用第三方声明文件：
+
+```shell
+npm install @types/node --save-dev
+```
