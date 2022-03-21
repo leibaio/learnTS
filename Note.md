@@ -1114,3 +1114,146 @@ tom.run();
 ```
 
 调用完 getCacheData 后，立即断言为 Cat 类型。明确了 tom 的类型，后续对 tom 的访问就有了代码补全。
+
+## 声明文件
+
+当使用第三方库时，需要引用它的声明文件，才能获取对应的代码补全、接口提示等功能
+
+### 新语法索引
+
+* declare var 声明全局变量
+* declare function  声明全局方法
+* declare class 声明全局类
+* declare enum 声明全局枚举类型
+* declare namespace 声明（含有子属性的）全局对象
+* interface 和 type 声明全局类型
+* export  导出变量
+* export namespace  导出（含有子属性的）对象
+* export default  ES6 默认导出
+* export -  commonjs 导出模块
+* export as namespace UMD 库声明全局变量
+* declare global  扩展全局变量
+* declare module  拓展模块
+* /// <reference /> 三斜线指令
+
+### 什么是声明语句
+
+使用 jQuery 一种常见的方式是在 html 中通过 <script> 标签引入 jQuery，然后可以使用全局变量 $ 或 jQuery
+
+通常获取一个 id 是 foo 的元素
+
+```javascript
+$('#foo');
+jQuery('#foo');
+```
+
+但在 ts 中，编译器不知道 $ 或 jQuery 是什么
+
+```typescript
+$('#foo')
+// Cannot find name '$'. Do you need to install type definitions for jQuery? Try `npm i --save-dev @types/jquery`.
+
+jQuery('#foo');
+// Cannot find name 'jQuery'.ts(2304)
+```
+
+这时候需要使用 declare var 定义它的类型
+
+```typescript
+declare var jQuery: (selector: string) => any;
+jQuery('#foo');
+```
+
+上述中，declare var 并没有真的定义一个变量，只是定义全局变量 jQuery 的类型，仅仅用于编译时的检查，在编译结果中会被删除。编译结果：
+
+```javascript
+jQuery('#foo');
+```
+
+### 什么是声明文件
+
+通常会将声明语句放在一个单独的文件中（jQuery.d.ts）中，这就是声明文件
+
+```typescript
+// src/jQuery.d.ts
+declare var jQuery: (selector: string) => any;
+```
+
+```typescript
+// src/index.ts
+jQuery('#foo');
+```
+
+声明文件必需以 .d.ts 为后缀。
+
+一般来说，ts 会解析项目中所有的 *.ts 文件，当然包含 .d.ts 文件。所以将 jQuery.d.ts 放到项目中，其他的 *.ts 文件都可以获得 jQuery 的类型定义了。
+
+#### 第三方声明文件
+
+可以使用 @types ，直接 npm 安装对应的声明模块，以 jQuery 举例
+
+```shell
+npm install @types/jquery --save-dev
+```
+可以在此处搜索需要的声明文件 https://www.typescriptlang.org/dt/search?search=
+
+### 书写声明文件
+
+不同场景下，声明文件的内容和使用方式会有所区别。库的使用场景主要有以下几种：
+
+* 全局变量：通过 <script> 标签引入第三方库，注入全局变量
+* npm 包：通过 import foo from 'foo' 导入，符合 ES6 模块规范
+* UMD 库：既可以通过 <script> 标签引入，又可以通过 import 导入
+* 直接扩展全局变量：通过 <script> 标签引入后，改变一个全局变量的结构
+* 在 npm 包或 UMD 库中扩展全局变量：引用 npm 包或 UMD 库后，改变一个全局变量的结构
+* 模块插件：通过 <script> 或 <import> 导入后，改变另一个模块的结构
+
+#### 全局变量
+
+全局变量是最简单的场景，之前举的例子就是通过 <script> 标签引入 jQuery，注入全局变量 `$` 和 `jQuery`。
+
+使用全局变量的声明文件时，如果是以 `npm install #types/xxx --save-dev` 安装的，则不需要任何配置。如果是将声明文件直接存放于当前项目中，建议和其他源码一起放到 `src` 或者对应的源码目录下。
+
+全局变量的声明文件主要有以下几种语法：
+
+`declare var`
+
+能够用来定义一个全局变量的类型。与其类似的，还有 `declare let` 和 `declare const`。
+
+```typescript
+// src/jQuery.d.ts
+
+declare let jQuery: (selector: string) => any;
+```
+
+```typescript
+// src/index.ts
+
+jQuery('#foo');
+// 使用 declare let 定义的 jQuery 类型，允许修改这个全局变量
+jQuery = function(selector) {
+  return document.querySelector(selector);
+}
+```
+
+当使用 `const` 定义时，此时的全局变量是一个常量，不允许修改值了。
+
+```typescript
+// src/jQuery.d.ts
+declare const jQuery: (selector: string) => any;
+
+jQuery('#foo');
+jQuery = function(selector) {
+  return document.querySelector(selector);
+}
+// Cannot assign to 'jQuery' because it is a constant.ts(2588)
+```
+
+需要注意的是，声明语句中只能定义类型，切勿在语句中定义具体的实现：
+
+```typescript
+declare const jQuery = function(selector) {
+  return document.querySelector(selector);
+};
+// A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.ts(1254)
+```

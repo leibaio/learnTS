@@ -498,14 +498,45 @@
 
 
 // 将 any 断言为一个具体的类型
-function getCacheData(key: string): any {
-  return (window as any).cache[key];
-}
+// function getCacheData(key: string): any {
+//   return (window as any).cache[key];
+// }
 
-interface Cat {
-  name: string;
-  run(): void;
-}
+// interface Cat {
+//   name: string;
+//   run(): void;
+// }
 
-const tom = getCacheData('tom') as Cat;
-tom.run();
+// const tom = getCacheData('tom') as Cat;
+// tom.run();
+
+
+
+// 声明文件
+// $('#foo')
+// Cannot find name '$'. Do you need to install type definitions for jQuery? Try `npm i --save-dev @types/jquery`.
+
+// jQuery('#foo');
+// Cannot find name 'jQuery'.ts(2304)
+
+// 使用 declare var 定义类型
+// declare var jQuery: (selector: string) => any;
+// jQuery('#foo');
+
+
+// 使用 const 声明全局变量
+// src/jQuery.d.ts
+// declare const jQuery: (selector: string) => any;
+
+// jQuery('#foo');
+// jQuery = function(selector) {
+//   return document.querySelector(selector);
+// }
+// // Cannot assign to 'jQuery' because it is a constant.ts(2588)
+
+
+// 声明语句只能定义类型，不要具体实现
+declare const jQuery = function(selector) {
+  return document.querySelector(selector);
+};
+// A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.ts(1254)
