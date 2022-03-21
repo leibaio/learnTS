@@ -560,4 +560,17 @@
 
 // TS 核心库的定义文件
 
-Math.pow(10, 2)
+// Math.pow(10, 2)
+
+
+// 类型别名
+// type Name = string;
+// type NameResolve = () => string;
+// type NameOrResolve = Name | NameResolve;
+// function getName(n: NameOrResolve): Name {
+//   if (typeof n === 'string') {
+//     return n;
+//   } else {
+//     return n();
+//   }
+// }
