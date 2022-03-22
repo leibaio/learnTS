@@ -11,4 +11,16 @@
 
 
 // TypeScript 是弱类型
-console.log(1 + '1');
+// console.log(1 + '1');
+
+
+// 字符串字面量类型
+
+type EventNames = 'click' | 'scroll' | 'mousemove';
+function handleEvent(ele: Element, event: EventNames) {
+  // do sth
+}
+
+handleEvent(document.getElementById('hello'), 'scroll'); // 没问题
+handleEvent(document.getElementById('world'), 'dbclick'); // 报错
+// Argument of type '"dbclick"' is not assignable to parameter of type 'EventNames'.
