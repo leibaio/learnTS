@@ -436,3 +436,148 @@
 // }
 
 // let point3d: Point3d = {x: 1, y: 2, z: 3};
+
+
+// 泛型
+// function createArray(length: number, value: any): Array<any> {
+//   let result = [];
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value;
+//   }
+//   return result;
+// }
+
+// createArray(3, 'x');
+
+
+// 指定 string 类型
+// function createArray<T>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value;
+//   }
+//   return result;
+// }
+
+// createArray<string>(3, 'x');
+
+
+// 不指定，让自动推论
+// function createArray<T>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value;
+//   }
+//   return result;
+// }
+
+// createArray(3, 'x');
+
+
+
+// 一次定义多个类型参数
+// function swap<T, U>(tuple: [T, U]): [U, T] {
+//   return [tuple[1], tuple[0]];
+// }
+
+// swap([7, 'seven']);
+
+
+
+// 泛型约束
+
+// function loggingIdentity<T>(arg: T):T {
+//   console.log(arg.length);
+//   return arg;
+// }
+// // Property 'length' does not exist on type 'T'.ts(2339)
+
+
+// 上述 T 中不一定包含 length，使用泛型约束
+// interface Lengthwise {
+//   length: number;
+// }
+
+// function loggingIdentity<T extends Lengthwise>(arg: T): T {
+//   console.log(arg.length);
+//   return arg;
+// }
+
+
+// 如果 arg 不含 length
+// interface Lengthwise {
+//   length: number;
+// }
+
+// function loggingIdentity<T extends Lengthwise>(arg: T): T {
+//   console.log(arg.length);
+//   return arg;
+// }
+
+// loggingIdentity(1);
+// // Argument of type 'number' is not assignable to parameter of type 'Lengthwise'.ts(2345)
+
+
+// 多个参数类型也可以相互约束
+// function copyFields<T extends U, U>(target: T, source: U): T {
+//   for (let id in source) {
+//     target[id] = (<T>source)[id];
+//   }
+//   return target;
+// }
+
+// let x = { a: 1, b: 2, c: 3, d: 4 };
+
+// copyFields(x, { b: 10, d: 20 });
+
+
+
+// 泛型接口
+
+// 接口定义函数需要符合形状
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+// }
+
+// let mySearch: SearchFunc;
+// mySearch = function(source: string, subString: string) {
+//   return source.search(subString) !== -1;
+// }
+
+
+// 使用含有泛型的接口定义函数的形状：
+// interface CreateArrayFunc {
+//   <T>(length: number, value: T): Array<T>;
+// }
+
+// let createArray: CreateArrayFunc;
+// createArray = function<T>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//   for (let i = 0; i < length; i++) {
+//     result[i] = value;
+//   }
+//   return result;
+// }
+
+// createArray(3, 'x');
+
+
+// 泛型类
+// class GenericNumber<T> {
+//   zeroValue: T;
+//   add: (x: T, y: T) => T;
+// }
+
+// let myGenericNumber = new GenericNumber<number>();
+// myGenericNumber.zeroValue = 0;
+// myGenericNumber.add = function(x, y) { return x + y; }
+
+
+// 泛型参数的默认类型
+function createArray<T = string>(length: number, value: T): Array<T> {
+  let result: T[] = [];
+  for (let i = 0; i < length; i++) {
+    result[i] = value;
+  }
+  return result;
+}
